@@ -1,5 +1,5 @@
 # m2m-api
-# Table of contents
+## Table of contents
 1. [Channel Data Resources](#channel-data-resources)
    * [Set Channel Data Resources on Your Device](#set-channel-data-resources-on-your-device)
    * [Capture Channel Data from Device](#capture-channel-data-from-device)
