@@ -16,16 +16,9 @@
 3. [HTTP API Resources](#http-api)
     * [Set HTTP GET and POST Resources on Your Device](#device-get-and-post-method-setup)
     * [Client HTTP GET and POST Request](#client-get-and-post-request)
-4. [Device Orchestration](#device-orchestration)
-    * [Remote Machine Monitoring](#remote-machine-monitoring)
-5. [Using the Browser Interface](#using-the-browser-interface)
-   * [Enable Application Code Editing](#remote-application-code-editing)
-   * [Enable Application Auto Restart](#application-auto-restart)
-   * [Automatic Configuration for Code Editing and Auto Restart](#code-edit-and-auto-restart-automatic-configuration)
-   * [Naming your Client Application for Tracking Purposes](#naming-your-client-application-for-tracking-purposes)
-6. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
-7. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
-8. [Connecting to other server](#connecting-to-other-m2m-server)
+4. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
+5. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
+6. [Connecting to other server](#connecting-to-other-m2m-server)
 
 
 ## Channel Data Resources
