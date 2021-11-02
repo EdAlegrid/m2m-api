@@ -1,58 +1,31 @@
-# m2m
-
-[![Version npm](https://img.shields.io/npm/v/m2m.svg?logo=npm)](https://www.npmjs.com/package/m2m)
-![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fwww.node-m2m.com%2Fm2m%2Fbuild-badge%2F2021)
-
-m2m is a lightweight real-time communication library for developing client-server or pub-sub applications using the machine-to-machine framework [node-m2m](https://www.node-m2m.com).
-
-It uses a FaaS (Function-as-a-Service) API also called *serverless* allowing anyone to easily create, prototype and test applications in IoT, telematics, data acquisition, process automation and a lot more.
-
-You can deploy multiple private device servers on the fly from anywhere without the usual heavy infrastructure involved in provisioning an on-premise physical servers. Your device servers will be instantly available and accessible through its user-assigned *device id* from your client applications.
-
-You can set multiple *Channel*, *HTTP* and *GPIO* ( for Raspberry Pi devices ) resources on your remote device for client consumption.
-
-Access to clients and devices is restricted to authenticated and authorized users only. All communications traffic between clients and devices are fully encrypted using TLS.
-
-To use this library, users will need to <a href="https://www.node-m2m.com/m2m/account/create" target="_blank">register</a> with node-m2m.
-
-Start your first m2m application using the [quick tour](#quick-tour) guide.
-
-[](https://raw.githubusercontent.com/EdoLabs/src/master/m2mSystem2.svg?sanitize=true)
-
+# m2m-api
 # Table of contents
-1. [Supported Platform](#supported-platform)
-2. [Node.js version requirement](#nodejs-version-requirement)
-3. [Installation](#installation)
-4. [Quick Tour](#quick-tour)
-   1. [Capturing and Watching Data](#capturing-and-watching-data)
-   2. [Raspberry Pi Remote Control](#raspberry-pi-remote-control)
-   3. [Capturing Data from Remote C/C++ Application through IPC (inter-process communication)](#capturing-data-from-remote-application-through-IPC)
-5. [Channel Data Resources](#channel-data-resources)
+1. [Channel Data Resources](#channel-data-resources)
    * [Set Channel Data Resources on Your Device](#set-channel-data-resources-on-your-device)
    * [Capture Channel Data from Device](#capture-channel-data-from-device)
    * [Watch Channel Data from Device](#watch-channel-data-from-device)
    * [Send Data to Device](#sending-data-to-device)
    * [Example - Using MCP 9808 Temperature Sensor](#using-mcp-9808-temperature-sensor)
-6. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
+2. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
    * [Set GPIO Input Resources on Your Device](#set-gpio-input-resources-on-your-device)
    * [Set GPIO Output Resources on Your Device](#set-gpio-output-resources-on-your-device)
    * [Capture/Watch GPIO Input Resources from Device](#capture-and-watch-gpio-input-resources-from-device)
    * [Control (On/Off) GPIO Output Resources from Device](#control-gpio-output-resources-from-device)
    * [Using Channel Data API for GPIO Input/Output Resources](#using-channel-data-api-for-gpio-resources)
    * [Example - GPIO Input Monitoring and Output Control](#gpio-input-monitoring-and-output-control)
-7. [HTTP API Resources](#http-api)
+3. [HTTP API Resources](#http-api)
     * [Set HTTP GET and POST Resources on Your Device](#device-get-and-post-method-setup)
     * [Client HTTP GET and POST Request](#client-get-and-post-request)
-8. [Device Orchestration](#device-orchestration)
+4. [Device Orchestration](#device-orchestration)
     * [Remote Machine Monitoring](#remote-machine-monitoring)
-9. [Using the Browser Interface](#using-the-browser-interface)
+5. [Using the Browser Interface](#using-the-browser-interface)
    * [Enable Application Code Editing](#remote-application-code-editing)
    * [Enable Application Auto Restart](#application-auto-restart)
    * [Automatic Configuration for Code Editing and Auto Restart](#code-edit-and-auto-restart-automatic-configuration)
    * [Naming your Client Application for Tracking Purposes](#naming-your-client-application-for-tracking-purposes)
-10. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
-11. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
-12. [Connecting to other server](#connecting-to-other-m2m-server)
+6. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
+7. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
+8. [Connecting to other server](#connecting-to-other-m2m-server)
 
 ## Supported Platform
 
