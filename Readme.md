@@ -1163,16 +1163,25 @@ client.connect((result) => {
 ```
 ## Connecting to other m2m server
 ### You can connect to a different server by providing the url of the server you want to use
+By default without a url argument, the connect method will use the 'https://www.node-m2m.com' server
 ```js
-...
-// By default without a url argument, the connect method will use the 'https://www.node-m2m.com' server
-.connect(function(result){
-  // application logic
-});
+const m2m = require('m2m');
 
-// To connect to a different server, provide a url argument to the connect method
-// e.g. using the 'https://www.my-m2m-server.com' server
-.connect('https://www.my-m2m-server.com', function(result){
-  // application logic
+const client = new m2m.Client();
+
+client.connect((result) => {
+  ...
+});
+```
+To connect to a different server, provide the url of the new server
+
+e.g. using the 'https://www.my-m2m-server.com' as the url of the new server
+```js
+const m2m = require('m2m');
+
+const client = new m2m.Client();
+
+client.connect('https://www.my-m2m-server.com', (result) => {
+  ...
 });
 ```
