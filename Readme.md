@@ -30,7 +30,7 @@ const { Device } = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect((result) => {
+device.connect(() => {
   ...
 
   /*
@@ -58,7 +58,7 @@ const { Client } = require('m2m');
 
 let client = new Client();
 
-client.connect((result) => {
+client.connect(() => {
   ...
 
   /**
@@ -91,7 +91,7 @@ const { Client } = require('m2m');
 
 let client = new Client();
 
-client.connect((result) => {
+client.connect(() => {
   ...
 
  /**
@@ -179,8 +179,7 @@ const i2c = require('./node_modules/m2m/examples/i2c/9808.js');
 
 let device = new m2m.Device(110);
 
-device.connect(function(result){
-  console.log('result', result);
+device.connect(function(){
 
   device.setData('sensor-temperature', function(data){
     // temperature data
@@ -218,8 +217,7 @@ const rawData = i2c1.readWordSync(MCP9808_ADDR, TEMP_REG);
 
 let device = new m2m.Device(110);
 
-device.connect(function(result){
-  console.log('result', result);
+device.connect(function(){
 
   device.setData('sensor-temperature', function(data){
     // temperature data
@@ -237,8 +235,7 @@ const m2m = require('m2m');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let device = client.accessDevice(110);
 
@@ -257,8 +254,7 @@ const m2m = require('m2m');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let device = client.accessDevice(110);
 
@@ -288,8 +284,7 @@ const m2m = require('m2m');
 
 let server = new m2m.Device(deviceId);
 
-server.connect(function(result){
-  console.log('result', result);
+server.connect(function(){
 
   server.setData(channel, function(data){
 
@@ -310,8 +305,7 @@ const m2m = require('m2m');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let server = client.accessDevice(deviceId);
 
@@ -333,8 +327,7 @@ const fs = require('fs');
 
 let server = new m2m.Device(200);
 
-server.connect(function(result){
-  console.log('result', result);
+server.connect(function(){
 
   server.setData('echo-server', function(data){
     // send back the payload to client
@@ -379,8 +372,7 @@ const fs = require('fs');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let server = client.accessDevice(200);
 
@@ -431,7 +423,7 @@ const { Device }  = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect((result) => {
+device.connect(() => {
   ...
 
   // Set a GPIO input resource using a single pin - pin1
@@ -463,7 +455,7 @@ const { Device }  = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect((result) => {
+device.connect(() => {
   ...
 
   device.setGpio({mode:'input', pin:[15, 19], type:'sim'}, (gpio) => {
@@ -485,7 +477,7 @@ const { Device }  = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect((result) => {
+device.connect(() => {
   ...
 
   // Set a GPIO output resource using a single pin - pin1
@@ -515,7 +507,7 @@ const { Device }  = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect((result) => {
+device.connect(() => {
   ...
 
   device.setGpio({mode:'output', pin:[33, 35], type:'sim'}, (gpio) => {
@@ -534,7 +526,7 @@ const { Client } = require('m2m');
 
 let client = new Client();
 
-client.connect((result) => {
+client.connect(() => {
   ...
 
   let device = client.accessDevice(deviceId);
@@ -580,7 +572,7 @@ const { Client } = require('m2m');
 
 let client = new Client();
 
-client.connect((result) => {
+client.connect(() => {
   ...
 
   let device = client.accessDevice(deviceId);
@@ -655,8 +647,7 @@ const m2m = require('m2m');
 
 let device = new m2m.Device(120);
 
-device.connect(function(result){
-  console.log('result', result);
+device.connect(function(){
 
   // Set GPIO input resources using pin 11 and 13
   device.setGpio({mode:'input', pin:[11, 13]});
@@ -671,8 +662,7 @@ const m2m = require('m2m');
 
 let device = new m2m.Device(130);
 
-device.connect(function(result){
-  console.log('result', result);
+device.connect(function(){
 
   // Set GPIO output resources using pin 33 and 35
   device.setGpio({mode:'output', pin:[33, 35]});
@@ -686,8 +676,7 @@ const m2m = require('m2m');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let device1 = client.accessDevice(120);
   let device2 = client.accessDevice(130);
@@ -749,8 +738,7 @@ const led = setOutput(33);
 
 const server = new m2m.Device(200);
 
-server.connect(function(result){
-  console.log('result', result);
+server.connect(function(){
 
   // set 'sw1-state' resource
   server.setData('sw1-state', function(data){
@@ -783,8 +771,7 @@ const m2m = require('m2m');
 
 let client = new m2m.Client();
 
-client.connect(function(result){
-  console.log('result', result);
+client.connect(function(){
 
   let device = client.accessDevice(200);
 
@@ -818,8 +805,7 @@ const m2m = require('m2m');
 
 const server = new m2m.Device(deviceId);
 
-server.connect((result) => {
-  console.log('result', result);
+server.connect(() => {
 
   // set a GET method resource
   server.get(path, (data) => {
@@ -847,8 +833,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect((result) => {
-  console.log('result', result);
+client.connect(() => {
 
   let server = client.accessServer(deviceId);
 
@@ -874,8 +859,7 @@ const server = new m2m.Device(300);
 
 let currentData = {name:'Jim', age:34};
 
-server.connect((result) => {
-  console.log('result', result);
+server.connect(() => {
 
   server.get('current/data', (data) => {
     // send current data as response
@@ -896,8 +880,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect((result) => {
-  console.log('result', result);
+client.connect(() => {
 
   let server = client.accessDevice(300);
 
@@ -959,8 +942,7 @@ watchInput(() => {
 });
 
 // m2m device application
-device.connect((result) => {
-  console.log('result', result);
+device.connect(() => {
 
   device.setData('machine-status', function(data){
 
@@ -983,8 +965,7 @@ const { Client } = require('m2m');
 
 const client = new Client();
 
-client.connect((result) => {
-  console.log('result', result);
+client.connect(() => {
 
   client.accessDevice([100, 200, 300], function(devices){
     let t = 0;
@@ -1093,7 +1074,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client({name:'Main client', location:'Boston, MA', description:'Test client app'});
 
-client.connect((result) => {
+client.connect(() => {
   ...
 });
 ```
@@ -1104,8 +1085,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect((result) => {
-  console.log('result', result);
+client.connect(() => {
 
   // server request to get all registered devices
   client.getDevices((devices) => {
@@ -1126,8 +1106,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect((result) => {
-  console.log('result', result);
+client.connect(() => {
 
   let device = client.accessDevice(300);
 
@@ -1162,7 +1141,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect((result) => {
+client.connect(() => {
   ...
 });
 ```
@@ -1174,7 +1153,7 @@ const m2m = require('m2m');
 
 const client = new m2m.Client();
 
-client.connect('https://www.my-m2m-server.com', (result) => {
+client.connect('https://www.my-m2m-server.com', () => {
   ...
 });
 ```
