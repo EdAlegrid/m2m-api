@@ -1,29 +1,69 @@
 # m2m-api
 ## Table of contents
-1. [Channel Data Resources](#channel-data-resources)
-   * [Set Channel Data Resources on Your Device](#set-channel-data-resources-on-your-device)
-   * [Capture Channel Data from Device](#capture-channel-data-from-device)
-   * [Watch Channel Data from Device](#watch-channel-data-from-device)
-   * [Send Data to Device](#sending-data-to-device)
+1. [Connecting to server](#connecting-to-server)
+2. [Channel Data Resources](#channel-data-resources)
+   * [Set Channel Data Resources on a Device](#set-channel-data-resources-on-a-device)
+   * [Capture Channel Data from a Device](#capture-channel-data-from-a-device)
+   * [Watch Channel Data from a Device](#watch-channel-data-from-a-device)
+   * [Send Data to a Device](#sending-data-to-a-device)
    * [Example - Using MCP 9808 Temperature Sensor](#using-mcp-9808-temperature-sensor)
-2. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
-   * [Set GPIO Input Resources on Your Device](#set-gpio-input-resources-on-your-device)
-   * [Set GPIO Output Resources on Your Device](#set-gpio-output-resources-on-your-device)
-   * [Capture/Watch GPIO Input Resources from Device](#capture-and-watch-gpio-input-resources-from-device)
-   * [Control (On/Off) GPIO Output Resources from Device](#control-gpio-output-resources-from-device)
+3. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
+   * [Set GPIO Input Resources on a Device](#set-gpio-input-resources-on-a-device)
+   * [Set GPIO Output Resources on a Device](#set-gpio-output-resources-on-a-device)
+   * [Capture/Watch GPIO Input Resources from a Device](#capture-and-watch-gpio-input-resources-from-a-device)
+   * [Control (On/Off) GPIO Output Resources from a Device](#control-gpio-output-resources-from-a-device)
    * [Using Channel Data API for GPIO Input/Output Resources](#using-channel-data-api-for-gpio-resources)
    * [Example - GPIO Input Monitoring and Output Control](#gpio-input-monitoring-and-output-control)
-3. [HTTP API Resources](#http-api)
-    * [Set HTTP GET and POST Resources on Your Device](#device-get-and-post-method-setup)
-    * [Client HTTP GET and POST Request](#client-get-and-post-request)
-4. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
-5. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
-6. [Connecting to other server](#connecting-to-other-m2m-server)
+4. [HTTP API Resources](#http-api)
+    * [Set GET and POST Resources on a Device](#device-get-and-post-method-setup)
+    * [Client GET and POST Request](#client-get-and-post-request)
+5. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
+6. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
+7. [Connecting to other server](#connecting-to-other-m2m-server)
 
+## Connecting to Server
+
+Before your application's clients and devices start communicating with each other, they must connect and authenticate with the server.
+
+### Node.js Application
+
+### Client
+```js
+const { Client } = require('m2m');
+
+let Client = new Client();
+
+client.connect(() => {
+...
+});
+```
+### Device/Server
+```js
+const { Device } = require('m2m');
+
+let device = new Device(deviceId);
+
+device.connect(() => {
+...
+});
+```    
+
+### Browser Client
+
+```js
+// User access token
+let tkn = 'jc7734138116139a6ad9a4234e71de810a1087fa9e7fbfda74503d9f52616fc5';
+
+let client = new NodeM2M.Client();
+
+client.connect(tkn, () => {
+...
+});
+```
 
 ## Channel Data Resources
 
-### Set Channel Data Resources on Your Device
+### Set Channel Data Resources on a Device
 
 ```js
 const { Device } = require('m2m');
@@ -32,7 +72,6 @@ let device = new Device(deviceId);
 
 device.connect(() => {
   ...
-
   /*
    * Set a name for your channel data. You can use any name you want.
    */
@@ -48,11 +87,10 @@ device.connect(() => {
      */
     let ds = DataSource();
     data.send(ds);
-
   });
 });
 ```
-### Capture Channel Data from Device
+### Capture Channel Data from a Device
 ```js
 const { Client } = require('m2m');
 
@@ -60,7 +98,6 @@ let client = new Client();
 
 client.connect(() => {
   ...
-
   /**
    *  Capture channel data using a device alias
    */
@@ -68,8 +105,8 @@ client.connect(() => {
   // Access the remote device you want to access by creating an alias object
   let device = client.accessDevice(deviceId);
 
-  device.getData(channel, (data) => {
-    // data is the value of 'channel' data source
+  device.getData(channel-name, (data) => {
+    // data is the value of channel data source
     console.log(data);
   });
 
@@ -78,14 +115,14 @@ client.connect(() => {
    */
 
   // Provide the deviceId of the remote device you want to access
-  client.getData(deviceId, channel, (data) => {
-    // data is the value of 'channel' data source
+  client.getData({id:deviceId, channel:channel-name}, (data) => {
+    // data is the value of channel data source
     console.log(data);
   });
 });
 ```
 
-### Watch Channel Data from Device
+### Watch Channel Data from a Device
 ```js
 const { Client } = require('m2m');
 
@@ -102,31 +139,24 @@ client.connect(() => {
   let device = client.accessDevice(deviceId);
 
   // watch using a default poll interval of 5 secs
-  device.watch(channel, (data) => {
+  device.watch(channel-name, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
   });
 
   // watch using a 1 minute poll interval
-  device.watch(channel, 60000, (data) => {
+  device.watch(channel-name, 60000, (data) => {
     console.log(data);
   });
 
-  // unwatch channel data at a later time
+  // unwatch channel data
   setTimeout(() => {
-    device.unwatch(channel);
+    device.unwatch(channel-name, (data) => {
+      console.log(data); // outputs true if channel-name is valid
+    });
+    // or w/o callback
+    device.unwatch(channel-name);    
   }, 5*60000);
-
-  // watch again using the default poll interval
-  setTimeout(() => {
-    device.watch(channel);
-  }, 10*60000);
-
-  // watch again using a 1 min poll interval
-  setTimeout(() => {
-    device.watch(channel, 60000);
-  }, 15*60000);
-
 
   /**
    *  Watch channel data directly from the client object
@@ -136,33 +166,185 @@ client.connect(() => {
   // as 1st argument of watch method
 
   // watch using a default poll interval of 5 secs
-  client.watch(deviceId, channel, (data) => {
+  client.watch({id:deviceId, channel:channel-name}, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
   });
 
   // watch using 30000 ms or 30 secs poll interval
-  client.watch(deviceId, channel, 30000, (data) => {
+  client.watch({id:deviceId, channel:channel-name, interval:30000}, (data) => {
     console.log(data);
   });
 
-  // unwatch channel data at a later time
+  // unwatch channel data
   setTimeout(() => {
-    client.unwatch(deviceId, channel);
+    client.unwatch({id:deviceId, channel:channel-name}, (data) => {
+      console.log(data); // outputs true if channel-name is valid
+    });
+    // or w/o callback
+    client.unwatch({id:deviceId, channel:channel-name});
   }, 5*60000);
+});
+```
+### Sending Data to a Device
 
-  // watch again at a later time using the default poll interval
-  setTimeout(() => {
-    client.watch(deviceId, channel);
-  }, 10*60000);
+Instead of capturing or receiving data from remote devices, we can send data to device channel resources for updates and data migration, as control signal, or for whatever purposes you may need it in your application.  
 
-  // watch again at a later time using 30 secs poll interval
-  setTimeout(() => {
-    client.watch(deviceId, channel, 30000);
-  }, 15*60000);
+### Set Channel Data on Your Device
+```js
+const m2m = require('m2m');
+
+let server = new m2m.Device(deviceId);
+
+server.connect(function(){
+
+  server.setData(channel, function(data){
+
+    // set logic for the current path
+
+    // the data.payload property is the payload from client
+    // you can use it for whatever purposes in your application logic
+    data.payload;
+    // send a response
+    data.send(response);
+  });
+
+});  
+```
+### Send Channel Data to Device
+```js
+const m2m = require('m2m');
+
+let client = new m2m.Client();
+
+client.connect(function(){
+
+  /**
+   *  Send data using an alias
+   */
+  let server = client.accessDevice(deviceId);
+
+  // the payload can be a string, number or object
+  let payload = 'hello server';
+
+  server.sendData(channel-name, payload , function(data){
+    console.log('response', data);
+  });
+
+  /**
+   *  send data directly from the client object
+   */
+  // Provide the device id of the remote device you want to access
+  client.sendData({id:deviceId, channel:channel-name, payload:payload-data}, (data) => {
+    // data is the value of 'channel' data source
+    console.log(data);
+  });
 
 });
 ```
+
+### Example
+#### Device setup
+```js
+const m2m = require('m2m');
+const fs = require('fs');
+
+let server = new m2m.Device(200);
+
+server.connect(function(){
+
+  server.setData('echo-server', function(data){
+    // send back the payload to client
+    data.send(data.payload);
+  });
+
+  server.setData('send-file', function(data){
+
+    let file = data.payload;
+
+    fs.writeFile('myFile.txt', file, function (err) {
+      if (err) throw err;
+      console.log('file has been saved!');
+      // send a response
+      data.send({result 'success'});
+    });
+  });
+
+  server.setData('send-data', function(data){
+
+    console.log('data.payload', data.payload);
+    // data.payload  [{name:'Ed'}, {name:'Jim', age:30}, {name:'Kim', age:42, address:'Seoul, South Korea'}];
+
+    // send a response
+    if(Array.isArray(data.payload)){
+      data.send({data: 'valid'});
+    }
+    else{
+      data.send({data: 'invalid'});
+    }
+  });
+
+  server.setData('number', function(data){
+    console.log('data.payload', data.payload); // 1.2456
+  });
+});
+```
+#### Client setup
+```js
+const m2m = require('m2m');
+const fs = require('fs');
+
+let client = new m2m.Client();
+
+client.connect(function(){
+
+  /**
+   *  send data using a device alias
+   */
+
+  let server = client.accessDevice(200);
+
+  // sending a simple string payload data to 'echo-server' channel
+  let payload = 'hello server';
+
+  server.sendData('echo-server', payload , function(data){
+    console.log('echo-server', data); // 'hello server'
+  });
+
+  // sending a text file
+  let myfile = fs.readFileSync('myFile.txt', 'utf8');
+
+  server.sendData('send-file', myfile , function(data){
+    console.log('send-file', data); // {result: 'success'}
+  });
+
+  // sending a json data
+  let mydata = [{name:'Ed'}, {name:'Jim', age:30}, {name:'Kim', age:42, address:'Seoul, South Korea'}];
+
+  server.sendData('send-data', mydata , function(data){
+    console.log('send-data', data); // {data: 'valid'}
+  });
+
+  // sending data w/o a response
+  let num = 1.2456;
+
+  server.sendData('number', num);
+
+  /**
+   *  send data directly from the client object
+   */
+  client.sendData({id:200, channel:'echo-server', payload:payload}, function(data){
+    console.log('echo-server', data); // 'hello server'
+  });
+
+  client.sendData({id:200, channel:'send-file', payload:myfile}, function(data){
+    console.log('send-file', data); // {result: 'success'}
+  });
+
+  client.sendData({id:200, channel:'number', payload:num});
+});
+```
+
 ### Using MCP 9808 Temperature Sensor
 
 ![](https://raw.githubusercontent.com/EdoLabs/src2/master/example1.svg?sanitize=true)
@@ -274,142 +456,10 @@ client.connect(function(){
   }, 10*60000);
 });
 ```
-### Sending Data to Device
-
-Instead of capturing or receiving data from remote devices, we can send data to device channel resources for updates and data migration, as control signal, or for whatever purposes you may need it in your application.  
-
-### Set Channel Data on Your Device
-```js
-const m2m = require('m2m');
-
-let server = new m2m.Device(deviceId);
-
-server.connect(function(){
-
-  server.setData(channel, function(data){
-
-    // set logic for the current path
-
-    // the data.payload property is the payload from client
-    // you can use it for whatever purposes in your application logic
-    data.payload;
-    // send a response
-    data.send(response);
-  });
-
-});  
-```
-### Send Channel Data to Device
-```js
-const m2m = require('m2m');
-
-let client = new m2m.Client();
-
-client.connect(function(){
-
-  let server = client.accessDevice(deviceId);
-
-  // the payload can be a string, number or object
-  let payload = 'hello server';
-
-  server.sendData(channel, payload , function(data){
-
-    console.log('response', data); 
-  });
-});
-```
-
-### Example
-#### Device setup
-```js
-const m2m = require('m2m');
-const fs = require('fs');
-
-let server = new m2m.Device(200);
-
-server.connect(function(){
-
-  server.setData('echo-server', function(data){
-    // send back the payload to client
-    data.send(data.payload);
-  });
-
-  server.setData('send-file', function(data){
-
-    let file = data.payload;
-
-    fs.writeFile('myFile.txt', file, function (err) {
-      if (err) throw err;
-      console.log('file has been saved!');
-      // send a response
-      data.send({result 'success'});
-    });
-  });
-
-  server.setData('send-data', function(data){
-
-    console.log('data.payload', data.payload);
-    // data.payload  [{name:'Ed'}, {name:'Jim', age:30}, {name:'Kim', age:42, address:'Seoul, South Korea'}];
-
-    // send a response
-    if(Array.isArray(data.payload)){
-      data.send({data: 'valid'});
-    }
-    else{
-      data.send({data: 'invalid'});
-    }
-  });
-
-  server.setData('number', function(data){
-    console.log('data.payload', data.payload); // 1.2456
-  });
-});
-```
-#### Client setup
-```js
-const m2m = require('m2m');
-const fs = require('fs');
-
-let client = new m2m.Client();
-
-client.connect(function(){
-
-  let server = client.accessDevice(200);
-
-  // sending a simple string payload data to 'echo-server' channel
-  let payload = 'hello server';
-
-  server.sendData('echo-server', payload , function(data){
-
-    console.log('echo-server', data); // 'hello server'
-  });
-
-  // sending a text file
-  let myfile = fs.readFileSync('myFile.txt', 'utf8');
-
-  server.sendData('send-file', myfile , function(data){
-
-    console.log('send-file', data); // {result: 'success'}
-  });
-
-  // sending a json data
-  let mydata = [{name:'Ed'}, {name:'Jim', age:30}, {name:'Kim', age:42, address:'Seoul, South Korea'}];
-
-  server.sendData('send-data', mydata , function(data){
-
-    console.log('send-data', data); // {data: 'valid'}
-  });
-
-  // sending data w/o a response
-  let num = 1.2456;
-
-  server.sendData('number', num);
-});
-```
 
 ## GPIO Resources for Raspberry Pi
 
-### Set GPIO Input Resources on Your Device
+### Set GPIO Input Resources on a Device
 
 Install array-gpio on your Raspberry Pi device
 ```js
@@ -457,14 +507,13 @@ let device = new Device(deviceId);
 
 device.connect(() => {
   ...
-
   device.setGpio({mode:'input', pin:[15, 19], type:'sim'}, (gpio) => {
     console.log('input pin', gpio.pin, 'state', gpio.state);
   });
 });
 ```
 
-### Set GPIO Output Resources on Your Device
+### Set GPIO Output Resources on a Device
 
 Install array-gpio on your Raspberry Pi device
 ```js
@@ -516,7 +565,7 @@ device.connect(() => {
 });
 ```
 
-### Capture and Watch GPIO Input Resources from Device
+### Capture and Watch GPIO Input Resources from a Device
 
 There are two ways we can capture and watch GPIO input resources from remote devices.
 
@@ -560,10 +609,26 @@ client.connect(() => {
   device.input(pin1).watch((state) => {
     console.log(state);
   });
+
+  /**
+   *  Get and watch gpio input state directly from the client object
+   */
+
+  // get current state of input pin1  
+  client.input({id:deviceId, pin:pin1}).getState((state) => {
+    // returns the state of pin1
+    console.log(state);
+  });
+
+  // watch input pin1, default scan interval is 100 ms
+  client.input({id:deviceId, pin:pin1}).watch((state) => {
+    console.log(state);
+  });
+
 });
 ```
 
-### Control GPIO Output Resources from Device
+### Control GPIO Output Resources from a Device
 
 Similar with GPIO input access, there are two ways we can set or control (on/off) the GPIO output state from remote devices.
 
@@ -632,6 +697,33 @@ client.connect(() => {
 
     // add custom logic here
   });  
+
+  /**
+   *  Control gpio output directly from the client object
+   */
+
+  // get current state of output pin1  
+  client.output({id:deviceId, pin:pin1}).getState((state) => {
+    // returns the state of pin1
+    console.log(state);
+  });
+
+  // turn ON output pin1 w/ a callback
+  client.output({id:deviceId, pin:pin1}).on((state) => {
+    console.log(state);
+  });
+
+  // turn OFF output pin1 w/ a callback
+  client.output({id:deviceId, pin:pin1}).off((state) => {
+    console.log(state);
+  });
+
+  // turn ON output pin1 w/o a callback
+  client.output({id:deviceId, pin:pin1}).on();
+
+  // turn OFF output pin1 w/o a callback
+  client.output({id:deviceId, pin:pin1}).off();
+
 });
 ```
 ### GPIO Input Monitoring and Output Control
@@ -816,7 +908,6 @@ server.connect(() => {
 
   // set a POST method resource
   server.post(path, (data) => {
-
     // set logic for the current path
 
     // the data.body property is the payload from client
@@ -835,15 +926,32 @@ const client = new m2m.Client();
 
 client.connect(() => {
 
+  /**
+   *  send data using an alias
+   */
   let server = client.accessServer(deviceId);
 
   // GET method request
   server.get(path, (data) => {    
-    console.log('response', data); 
+    console.log('response', data);
   });
 
-  // POST method request 
+  // POST method request
   server.post(path, body, (data) => {   
+    console.log('response', data);
+  });
+
+  /**
+   *  send data directly from the client object
+   */
+
+  // GET method request
+  client.get(id:deviceId , path:path-name}, (data) => {    
+    console.log('response', data);
+  });
+
+  // POST method request
+  client.post({id:deviceId, path:path-name, body:body-data}, (data) => {   
     console.log('response', data);
   });
 
@@ -882,6 +990,9 @@ const client = new m2m.Client();
 
 client.connect(() => {
 
+  /**
+   *  send data using an alias
+   */
   let server = client.accessDevice(300);
 
   server.get('current/data', (data) => {    
@@ -895,6 +1006,17 @@ client.connect(() => {
 
   // request after update for path 'current/data'
   server.get('current/data'); // {name:'Ed', age:45}
+
+  /**
+   *  client get/post directly from the client object
+   */
+  server.get({id:300, path:'current/data'}, (data) => {    
+   console.log('current/data', data); // {name:'Jim', age:34}
+  });
+
+  server.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
+    console.log('data/update', data); // 'success'
+  });
 
 });
 ```
