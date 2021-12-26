@@ -658,7 +658,6 @@ client.connect(() => {
   // for additional data processing/filtering with a custom logic
   device.gpio({mode:'out', pin:pin1}).on((state) => {
     console.log(state);
-
     // add custom logic here
   });
 
@@ -666,7 +665,6 @@ client.connect(() => {
   // for additional data processing/filtering with a custom logic
   device.gpio({mode:'out', pin:pin1}).off((state) => {
     console.log(state);
-
     // add custom logic here
   });
 
@@ -686,7 +684,6 @@ client.connect(() => {
   // for additional data processing/filtering with a custom logic
   device.output(pin1).on((state) => {
     console.log(state);
-
     // add custom logic here
   });  
 
@@ -694,7 +691,6 @@ client.connect(() => {
   // for additional data processing/filtering with a custom logic
   device.output(pin1).off((state) => {
     console.log(state);
-
     // add custom logic here
   });  
 
@@ -927,7 +923,7 @@ const client = new m2m.Client();
 client.connect(() => {
 
   /**
-   *  send data using an alias
+   *  Send data using an alias
    */
   let server = client.accessServer(deviceId);
 
@@ -942,11 +938,11 @@ client.connect(() => {
   });
 
   /**
-   *  send data directly from the client object
+   *  Send data directly from the client object
    */
 
   // GET method request
-  client.get(id:deviceId , path:path-name}, (data) => {    
+  client.get({id:deviceId , path:path-name}, (data) => {    
     console.log('response', data);
   });
 
