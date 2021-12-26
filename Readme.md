@@ -987,7 +987,7 @@ const client = new m2m.Client();
 client.connect(() => {
 
   /**
-   *  send data using an alias
+   *  get/post request using an alias
    */
   let server = client.accessDevice(300);
 
@@ -1004,13 +1004,13 @@ client.connect(() => {
   server.get('current/data'); // {name:'Ed', age:45}
 
   /**
-   *  client get/post directly from the client object
+   *  get/post request directly from the client object
    */
-  server.get({id:300, path:'current/data'}, (data) => {    
+  client.get({id:300, path:'current/data'}, (data) => {    
    console.log('current/data', data); // {name:'Jim', age:34}
   });
 
-  server.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
+  client.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
     console.log('data/update', data); // 'success'
   });
 
