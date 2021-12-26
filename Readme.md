@@ -27,7 +27,7 @@ Before your application's clients and devices start communicating with each othe
 
 ### Node.js Application
 
-### Client
+#### Client
 ```js
 const { Client } = require('m2m');
 
@@ -37,7 +37,7 @@ client.connect(() => {
 ...
 });
 ```
-### Device/Server
+#### Device/Server
 ```js
 const { Device } = require('m2m');
 
