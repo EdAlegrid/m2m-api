@@ -1256,7 +1256,7 @@ client.connect(() => {
 ```
 ## Create an Access Token for Browser Client
 ##### 1. Login to [node-m2m](https://www.node-m2m.com/m2m/account/login).
-From the main dashboard, go to manage security section at the right side. Select create access token for browser client. You will received an email link to get your access token.
+From the main dashboard, go to manage security section at the right side. Select create access token for browser client. You will receive an email link to get your access token.
 
 ##### 2. Install m2m.
 
