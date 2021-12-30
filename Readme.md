@@ -31,7 +31,7 @@ Before your application's clients and devices start communicating with each othe
 ```js
 const { Client } = require('m2m');
 
-let Client = new Client();
+let client = new Client();
 
 client.connect(() => {
 ...
