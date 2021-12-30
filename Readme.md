@@ -1,25 +1,26 @@
 # m2m-api
 ## Table of contents
 1. [Connecting to server](#connecting-to-server)
-2. [Channel Data Resources](#channel-data-resources)
+2. [Create Access Token for Browser Client](#create-an-access-token-for-browser-client)
+3. [Channel Data Resources](#channel-data-resources)
    * [Set Channel Data Resources on a Device](#set-channel-data-resources-on-a-device)
    * [Capture Channel Data from a Device](#capture-channel-data-from-a-device)
    * [Watch Channel Data from a Device](#watch-channel-data-from-a-device)
    * [Send Data to a Device](#sending-data-to-a-device)
    * [Example - Using MCP 9808 Temperature Sensor](#using-mcp-9808-temperature-sensor)
-3. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
+4. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
    * [Set GPIO Input Resources on a Device](#set-gpio-input-resources-on-a-device)
    * [Set GPIO Output Resources on a Device](#set-gpio-output-resources-on-a-device)
    * [Capture/Watch GPIO Input Resources from a Device](#capture-and-watch-gpio-input-resources-from-a-device)
    * [Control (On/Off) GPIO Output Resources from a Device](#control-gpio-output-resources-from-a-device)
    * [Using Channel Data API for GPIO Input/Output Resources](#using-channel-data-api-for-gpio-resources)
    * [Example - GPIO Input Monitoring and Output Control](#gpio-input-monitoring-and-output-control)
-4. [HTTP API Resources](#http-api)
+5. [HTTP API Resources](#http-api)
     * [Set GET and POST Resources on a Device](#device-get-and-post-method-setup)
     * [Client GET and POST Request](#client-get-and-post-request)
-5. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
-6. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
-7. [Connecting to other server](#connecting-to-other-m2m-server)
+6. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
+7. [Get the available resources from a specific device](#client-request-to-get-the-available-resources-from-a-specific-device)
+8. [Connecting to other server](#connecting-to-other-m2m-server)
 
 ## Connecting to Server
 
@@ -27,17 +28,17 @@ Before your application's clients and devices start communicating with each othe
 
 ### Node.js Application
 
-#### Client
+### Client
 ```js
 const { Client } = require('m2m');
 
-let client = new Client();
+let Client = new Client();
 
 client.connect(() => {
 ...
 });
 ```
-#### Device/Server
+### Device/Server
 ```js
 const { Device } = require('m2m');
 
@@ -60,6 +61,8 @@ client.connect(tkn, () => {
 ...
 });
 ```
+
+Click [here](#create-an-access-token-for-browser-client) on how to create an access token,   
 
 ## Channel Data Resources
 
@@ -987,7 +990,7 @@ const client = new m2m.Client();
 client.connect(() => {
 
   /**
-   *  get/post request using an alias
+   *  send data using an alias
    */
   let server = client.accessDevice(300);
 
@@ -1004,13 +1007,13 @@ client.connect(() => {
   server.get('current/data'); // {name:'Ed', age:45}
 
   /**
-   *  get/post request directly from the client object
+   *  client get/post directly from the client object
    */
-  client.get({id:300, path:'current/data'}, (data) => {    
+  server.get({id:300, path:'current/data'}, (data) => {    
    console.log('current/data', data); // {name:'Jim', age:34}
   });
 
-  client.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
+  server.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
     console.log('data/update', data); // 'success'
   });
 
@@ -1251,6 +1254,55 @@ client.connect(() => {
   });  
 });
 ```
+## Create an Access Token for Browser Client
+##### 1. Login to [node-m2m](https://www.node-m2m.com/m2m/account/login).
+From the main dashboard, go to manage security section at the right side. Select create access token for browser client. You will received an email link to get your access token.
+
+##### 2. Install m2m.
+
+Copy the minimized file `node-m2m.min.js` from `node_modules/m2m/dist` directory to your server's public javascript directory.
+
+Include the minimized file `node-m2m.min.js` into your HTML file `<script src="YOUR_SCRIPT_PATH/node-m2m.min.js"></script>`. This will create a global **NodeM2M** object.
+
+##### 3. Create a client object instance from NodeM2M global object.
+
+You can now access the resources from your remote devices from the various methods available from the client instance. The API is similar to Node.js client applications as shown below.   
+
+```js
+<script>
+
+// Protect your access token at all times  
+var tkn = 'fce454138116159a6ad9a4234e71de810a1087fa9e7fbfda74503d9f52616fc5';
+
+var client = new NodeM2M.Client();
+
+client.connect(tkn, () => {
+
+  // capture 'random-number' data using a pull method
+  client.getData({id:100, channel:'random-number'}, (data) => {
+    console.log('getData random-number', data); // 97
+  });
+
+  // capture 'random-number' data using a push method
+  client.watch({id:100, channel:'random-number'}, (data) => {
+    console.log('watch random-number', data); // 81, 68, 115 ...
+  });
+
+  // update test-data
+  client.sendData({id:100, channel:'test-data', payload:'node-m2m is awesome'}, (data) => {
+    console.log('sendData test-data', data);
+  });
+
+  // capture updated test-data
+  client.getData({id:100, channel:'test-data'}, (data) => {
+    console.log('getData test-data', data); // node-m2m is awesome
+  });
+
+});
+
+</script>
+```
+
 ## Connecting to other m2m server
 ### You can connect to a different server by providing the url of the server you want to use
 By default without a url argument, the connect method will use the 'https://www.node-m2m.com' server
