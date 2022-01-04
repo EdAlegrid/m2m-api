@@ -53,7 +53,7 @@ device.connect(() => {
 
 ```js
 // User access token
-let tkn = 'jc7734138116139a6ad9a4234e71de810a1087fa9e7fbfda74503d9f52616fc5';
+let tkn = 'jc7734138116139a6ad9a4234e71de810a1087fa9e7fbfda74503d9f5216fc5';
 
 let client = new NodeM2M.Client();
 
@@ -62,7 +62,7 @@ client.connect(tkn, () => {
 });
 ```
 
-Click [here](#create-an-access-token-for-browser-client) on how to create an access token,   
+Click [here](#create-an-access-token-for-browser-client) on how to create an access token.   
 
 ## Channel Data Resources
 
@@ -1272,7 +1272,7 @@ You can now access the resources from your remote devices from the various metho
 <script>
 
 // Protect your access token at all times  
-var tkn = 'fce454138116159a6ad9a4234e71de810a1087fa9e7fbfda74503d9f52616fc5';
+var tkn = 'fce454138116159a6ad9a4234e7de810a1087fa9e7fbfda74503d9f52616fc5';
 
 var client = new NodeM2M.Client();
 
