@@ -15,7 +15,7 @@
    * [Control (On/Off) GPIO Output Resources from a Device](#control-gpio-output-resources-from-a-device)
    * [Using Channel Data API for GPIO Input/Output Resources](#using-channel-data-api-for-gpio-resources)
    * [Example - GPIO Input Monitoring and Output Control](#gpio-input-monitoring-and-output-control)
-5. [HTTP API Resources](#http-api)
+5. [HTTP API Resources](#http-api-resources)
     * [Set GET and POST Resources on a Device](#device-get-and-post-method-setup)
     * [Client GET and POST Request](#client-get-and-post-request)
 6. [Get all available remote devices](#server-query-to-get-all-available-remote-devices-per-user)
@@ -888,7 +888,7 @@ client.connect(function(){
   });
 });
 ```
-## HTTP API
+## HTTP Resources
 
 ### Device GET and POST method setup
 ```js
