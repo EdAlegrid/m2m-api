@@ -24,7 +24,7 @@
 
 ## Connecting to Server
 
-Before your application's clients and devices start communicating with each other, they must connect and authenticate with the server.
+Before your clients and devices start communicating with each other, they must be authenticated with the server.
 
 ### Node.js Application
 
