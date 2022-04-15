@@ -78,7 +78,7 @@ device.connect(() => {
   /*
    * Set a name for your channel data. You can use any name you want.
    */
-  device.setData(channel, (data) => {
+  device.setChannelData(channel, (data) => {
     /*
      * Provide a data source for your channel data.
      * Your data source can be of type string, number or object.
@@ -91,6 +91,14 @@ device.connect(() => {
     let ds = DataSource();
     data.send(ds);
   });
+  
+  // or use the shorthand api below which is the same as above
+  
+  device.setData(channel, (data) => {
+    let ds = DataSource();
+    data.send(ds);
+  });
+  
 });
 ```
 ### Capture Channel Data from a Device
@@ -108,6 +116,13 @@ client.connect(() => {
   // Access the remote device you want to access by creating an alias object
   let device = client.accessDevice(deviceId);
 
+  device.getChannelData(channel-name, (data) => {
+    // data is the value of channel data source
+    console.log(data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   device.getData(channel-name, (data) => {
     // data is the value of channel data source
     console.log(data);
@@ -118,10 +133,18 @@ client.connect(() => {
    */
 
   // Provide the deviceId of the remote device you want to access
+  client.getChannelData({id:deviceId, channel:channel-name}, (data) => {
+    // data is the value of channel data source
+    console.log(data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   client.getData({id:deviceId, channel:channel-name}, (data) => {
     // data is the value of channel data source
     console.log(data);
   });
+  
 });
 ```
 
@@ -142,6 +165,13 @@ client.connect(() => {
   let device = client.accessDevice(deviceId);
 
   // watch using a default poll interval of 5 secs
+  device.watchChannelData(channel-name, (data) => {
+    // data is the value of 'channel' data source
+    console.log(data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   device.watch(channel-name, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
@@ -169,11 +199,18 @@ client.connect(() => {
   // as 1st argument of watch method
 
   // watch using a default poll interval of 5 secs
+  client.watchChannelData({id:deviceId, channel:channel-name}, (data) => {
+    // data is the value of 'channel' data source
+    console.log(data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+
   client.watch({id:deviceId, channel:channel-name}, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
   });
-
+  
   // watch using 30000 ms or 30 secs poll interval
   client.watch({id:deviceId, channel:channel-name, interval:30000}, (data) => {
     console.log(data);
@@ -230,6 +267,12 @@ client.connect(function(){
   // the payload can be a string, number or object
   let payload = 'hello server';
 
+  server.sendChannelData(channel-name, payload , function(data){
+    console.log('response', data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   server.sendData(channel-name, payload , function(data){
     console.log('response', data);
   });
@@ -238,6 +281,13 @@ client.connect(function(){
    *  send data directly from the client object
    */
   // Provide the device id of the remote device you want to access
+  client.sendChannelData({id:deviceId, channel:channel-name, payload:payload-data}, (data) => {
+    // data is the value of 'channel' data source
+    console.log(data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   client.sendData({id:deviceId, channel:channel-name, payload:payload-data}, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
