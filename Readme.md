@@ -34,9 +34,7 @@ const { Client } = require('m2m');
 
 let Client = new Client();
 
-client.connect(() => {
-...
-});
+client.connect(() => { your app logic ...});
 ```
 ### Device/Server
 ```js
@@ -44,9 +42,7 @@ const { Device } = require('m2m');
 
 let device = new Device(deviceId);
 
-device.connect(() => {
-...
-});
+device.connect(() => { your app logic ...});
 ```    
 
 ### Browser Client
@@ -57,9 +53,7 @@ let tkn = 'jc7734138116139a6ad9a4234e71de810a1087fa9e7fbfda74503d9f5216fc5';
 
 let client = new NodeM2M.Client();
 
-client.connect(tkn, () => {
-...
-});
+client.connect(tkn, () => { your app logic ...});
 ```
 
 Click [here](#create-an-access-token-for-browser-client) on how to create an access token.   
@@ -67,6 +61,10 @@ Click [here](#create-an-access-token-for-browser-client) on how to create an acc
 ## Channel Data Resources
 
 ### Set Channel Data Resources on a Device
+
+One unique feature of using a channel data resource is that you only need to set one data source for each unique channel name in the device. 
+
+You can then access it from any client by capturing its value, monitor it by watching its value for changes or update it by sending a new value in real-time.  
 
 ```js
 const { Device } = require('m2m');
@@ -109,9 +107,11 @@ let client = new Client();
 
 client.connect(() => {
   ...
-  /**
+  /**********************************************
+   * 
    *  Capture channel data using a device alias
-   */
+   * 
+   **********************************************/
 
   // Access the remote device you want to access by creating an alias object
   let device = client.accessDevice(deviceId);
@@ -124,13 +124,14 @@ client.connect(() => {
   // or use the shorthand api below which is the same as above
   
   device.getData(channel-name, (data) => {
-    // data is the value of channel data source
     console.log(data);
   });
 
-  /**
+  /*********************************************************
+   * 
    *  Capture channel data directly from the client object
-   */
+   * 
+   *********************************************************/
 
   // Provide the deviceId of the remote device you want to access
   client.getChannelData({id:deviceId, channel:channel-name}, (data) => {
@@ -141,7 +142,6 @@ client.connect(() => {
   // or use the shorthand api below which is the same as above
   
   client.getData({id:deviceId, channel:channel-name}, (data) => {
-    // data is the value of channel data source
     console.log(data);
   });
   
@@ -157,9 +157,11 @@ let client = new Client();
 client.connect(() => {
   ...
 
- /**
+ /********************************************
+  * 
   *  Watch channel data using a device alias
-  */
+  * 
+  ********************************************/
 
   // Create an alias object for the remote device you want to access
   let device = client.accessDevice(deviceId);
@@ -173,7 +175,6 @@ client.connect(() => {
   // or use the shorthand api below which is the same as above
   
   device.watchData(channel-name, (data) => {
-    // data is the value of 'channel' data source
     console.log(data);
   });
 
@@ -191,9 +192,11 @@ client.connect(() => {
     device.unwatchData(channel-name);    
   }, 5*60000);
 
-  /**
+  /*******************************************************
+   * 
    *  Watch channel data directly from the client object
-   */
+   * 
+   *******************************************************/
 
   // Provide the device id of the remote device you want to access
   // as 1st argument of watch method
@@ -207,7 +210,6 @@ client.connect(() => {
   // or use the shorthand api below which is the same as above
 
   client.watchData({id:deviceId, channel:channel-name}, (data) => {
-    // data is the value of 'channel' data source
     console.log(data);
   });
   
@@ -226,9 +228,84 @@ client.connect(() => {
   }, 5*60000);
 });
 ```
+
+### Example
+#### Device setup
+```js
+const m2m = require('m2m');
+
+let device = new m2m.Device(100);
+
+let tempData = 'node-m2m';
+
+device.connect(function(){
+  device.setData('channel-data', function(data){
+    if(data.payload){
+      tempData = data.payload;
+    }  
+    data.send(tempData);
+  });
+});
+```
+#### Client setup
+```js
+const m2m = require('m2m');
+
+let client = new m2m.Client();
+
+client.connect(function(){
+
+  // Note: Use only one of the method below, not both of them
+
+  /***********************************************
+   * 
+   *  Method 1: access data using a device alias
+   * 
+   ***********************************************/
+
+  let device = client.accessDevice(100);
+
+  device.getData('channel-data', function(data){
+    console.log('device.getData result', data); // 'node-m2m'
+  });
+
+  device.watchData('channel-data', function(data){
+    // outputs 'node-m2m', after  update it will show 'hello server using an alias'
+    console.log('device.watchData result', data); 
+  });
+
+  // sending a simple string payload data to 'channel-data' channel
+  let payload = 'hello server using an alias';
+
+  device.sendData('channel-data', payload , function(data){
+    console.log('device.sendData result', data); // 'hello server using an alias'
+  });
+
+  /********************************************************
+   * 
+   *  Method 2: send data directly from the client object
+   * 
+   ********************************************************/
+
+  client.getData({id:100, channel:'channel-data'}, function(data){
+    console.log('client.getData', data); // 'node-m2m'
+  });
+
+  client.watchData({id:100, channel:'channel-data'}, function(data){
+    console.log('client.watchData', data); 
+  });
+
+  let payload = 'hello server from client object';
+
+  client.sendData({id:100, channel:'channel-data', payload:payload}, function(data){
+    console.log('client.sendData', data); // 'hello server from client object'
+  });
+});
+```
+
 ### Sending Data to a Device
 
-Instead of capturing or receiving data from remote devices, we can send data to device channel resources for updates and data migration, as control signal, or for whatever purposes you may need it in your application.  
+Instead of capturing or receiving data, you can send data to your remote devices.  
 
 ### Set Channel Data on Your Device
 ```js
@@ -240,11 +317,10 @@ server.connect(function(){
 
   server.setData(channel, function(data){
 
-    // set logic for the current path
-
-    // the data.payload property is the payload from client
-    // you can use it for whatever purposes in your application logic
+    // you will receive the data from any client from the payload property
+    // which you can use for whatever purposes in your application logic
     data.payload;
+
     // send a response
     data.send(response);
   });
@@ -259,9 +335,11 @@ let client = new m2m.Client();
 
 client.connect(function(){
 
-  /**
+  /*****************************
+   * 
    *  Send data using an alias
-   */
+   * 
+   *****************************/
   let server = client.accessDevice(deviceId);
 
   // the payload can be a string, number or object
@@ -277,20 +355,20 @@ client.connect(function(){
     console.log('response', data);
   });
 
-  /**
-   *  send data directly from the client object
-   */
+  /**********************************************
+   * 
+   *  Send data directly from the client object
+   * 
+   **********************************************/
   // Provide the device id of the remote device you want to access
   client.sendChannelData({id:deviceId, channel:channel-name, payload:payload-data}, (data) => {
-    // data is the value of 'channel' data source
-    console.log(data);
+    console.log('response', data);
   });
   
   // or use the shorthand api below which is the same as above
   
   client.sendData({id:deviceId, channel:channel-name, payload:payload-data}, (data) => {
-    // data is the value of 'channel' data source
-    console.log(data);
+    console.log('response', data);
   });
 
 });
@@ -312,9 +390,7 @@ server.connect(function(){
   });
 
   server.setData('send-file', function(data){
-
     let file = data.payload;
-
     fs.writeFile('myFile.txt', file, function (err) {
       if (err) throw err;
       console.log('file has been saved!');
@@ -324,10 +400,8 @@ server.connect(function(){
   });
 
   server.setData('send-data', function(data){
-
     console.log('data.payload', data.payload);
     // data.payload  [{name:'Ed'}, {name:'Jim', age:30}, {name:'Kim', age:42, address:'Seoul, South Korea'}];
-
     // send a response
     if(Array.isArray(data.payload)){
       data.send({data: 'valid'});
@@ -337,6 +411,7 @@ server.connect(function(){
     }
   });
 
+  // server just receiving the payload w/o response
   server.setData('number', function(data){
     console.log('data.payload', data.payload); // 1.2456
   });
@@ -351,9 +426,11 @@ let client = new m2m.Client();
 
 client.connect(function(){
 
-  /**
+  /***********************************
+   * 
    *  send data using a device alias
-   */
+   * 
+   ***********************************/
 
   let server = client.accessDevice(200);
 
@@ -383,9 +460,11 @@ client.connect(function(){
 
   server.sendData('number', num);
 
-  /**
+  /**********************************************
+   * 
    *  send data directly from the client object
-   */
+   * 
+   **********************************************/
   client.sendData({id:200, channel:'echo-server', payload:payload}, function(data){
     console.log('echo-server', data); // 'hello server'
   });
