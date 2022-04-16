@@ -1013,7 +1013,7 @@ client.connect(() => {
   });
 
   // POST method request
-  server.setHttpPost(path, body, (data) => {   
+  server.postRequest(path, body, (data) => {   
     console.log('response', data);
   });
   
@@ -1028,7 +1028,7 @@ client.connect(() => {
    */
   
   // GET method request
-  client.setHttpGet({id:deviceId , path:path-name}, (data) => {    
+  client.getRequest({id:deviceId , path:path-name}, (data) => {    
     console.log('response', data);
   });
   
@@ -1039,7 +1039,7 @@ client.connect(() => {
   });
 
   // POST method request
-  client.setHttpPost({id:deviceId, path:path-name, body:body-data}, (data) => {   
+  client.postRequest({id:deviceId, path:path-name, body:body-data}, (data) => {   
     console.log('response', data);
   });
   
