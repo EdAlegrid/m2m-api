@@ -308,7 +308,7 @@ client.connect(function(){
 });
 ```
 
-### Sending Data to a Device
+### Sending Data from a Client
 
 Instead of capturing or receiving data, you can send data to your remote devices.  
 
