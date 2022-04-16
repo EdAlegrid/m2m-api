@@ -894,7 +894,7 @@ client.connect(() => {
 ### GPIO Input Monitoring and Output Control
 
 ![](https://raw.githubusercontent.com/EdoLabs/src2/master/example2.svg?sanitize=true)
-Install array-gpio both on device1 and device2
+Install array-gpio both on device1 and client
 ```js
 $ npm install array-gpio
 ```
@@ -910,7 +910,7 @@ device.connect(function(){
 });
 ```
 
-#### Configure GPIO output resources on device2
+#### Configure GPIO output resources on client
 
 ```js
 const m2m = require('m2m');
@@ -922,7 +922,7 @@ device.connect(function(){
   device.setGpio({mode:'output', pin:[33, 35]});
 });
 ```
-#### Access GPIO input/output resources from device1 and device2
+#### Method 1: Access GPIO input/output resources from device1 and client using an alias
 
 ```js
 const m2m = require('m2m');
@@ -944,22 +944,22 @@ client.connect(function(){
   device1.input(13).watchState(function(state){
     if(state){
       // turn OFF output pin 35
-      device2.output(35).off();
+      device1.output(35).off();
     }
     else{
       // turn ON output pin 35
-      device2.output(35).on();
+      device1.output(35).on();
     }
   });
 
   // get current state of input pin 11
-  device1.input(11).getState(function(state){
+  device2.input(11).getState(function(state){
     // show current state of pin 11
     console.log(state);
   });
 
   // watch input pin 11
-  device1.input(11).watchState(function(state){
+  device2.input(11).watchState(function(state){
     if(state){
       // turn ON output pin 33
       device2.output(33).on();
@@ -969,9 +969,55 @@ client.connect(function(){
       device2.output(33).off();
     }
   });
-
 });
 ```
+#### Method 2: Access GPIO input/output resources from device1 and client directly from client
+
+```js
+const m2m = require('m2m');
+
+let client = new m2m.Client();
+
+client.connect(function(){
+
+  // get current state of input pin 13 from device 120
+  client.input({id:120, pin:13}).getState(function(state){
+    // show current state of pin 13
+    console.log(state);
+  });
+
+  // watch input pin 13
+  client.input({id:120, pin:13}).watchState(function(state){
+    if(state){
+      // turn OFF output pin 35
+      client.output({id:120, pin:35}).off();
+    }
+    else{
+      // turn ON output pin 35
+      client.output({id:120, pin:35}).on();
+    }
+  });
+
+  // get current state of input pin 11 from device 130
+  client.input({id:130, pin:11}).getState(function(state){
+    // show current state of pin 11
+    console.log(state);
+  });
+
+  // watch input pin 11
+  client.input({id:130, pin:11}).watchState(function(state){
+    if(state){
+      // turn ON output pin 33
+      client.output({id:130, pin:33}).on();
+    }
+    else{
+      // turn OFF output pin 33
+      client.output({id:130, pin:33}).off();
+    }
+  });
+});
+```
+
 ### Using Channel Data API for GPIO Resources
 
 If the standard API for setting GPIO resources does not meet your requirements, you can use the channel data API to set GPIO input/output resources.
