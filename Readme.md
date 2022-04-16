@@ -898,7 +898,7 @@ Install array-gpio both on device1 and client
 ```js
 $ npm install array-gpio
 ```
-#### Configure GPIO input resources on device1
+#### Configure GPIO input resources on device 1
 ```js
 const m2m = require('m2m');
 
@@ -910,7 +910,7 @@ device.connect(function(){
 });
 ```
 
-#### Configure GPIO output resources on client
+#### Configure GPIO output resources on device 2
 
 ```js
 const m2m = require('m2m');
@@ -944,22 +944,22 @@ client.connect(function(){
   device1.input(13).watchState(function(state){
     if(state){
       // turn OFF output pin 35
-      device1.output(35).off();
+      device2.output(35).off();
     }
     else{
       // turn ON output pin 35
-      device1.output(35).on();
+      device2.output(35).on();
     }
   });
 
   // get current state of input pin 11
-  device2.input(11).getState(function(state){
+  device1.input(11).getState(function(state){
     // show current state of pin 11
     console.log(state);
   });
 
   // watch input pin 11
-  device2.input(11).watchState(function(state){
+  device1.input(11).watchState(function(state){
     if(state){
       // turn ON output pin 33
       device2.output(33).on();
