@@ -1027,28 +1027,28 @@ const sw1 = setInput(11);
 // set pin 33 as output led
 const led = setOutput(33);
 
-const server = new m2m.Device(200);
+const device = new m2m.Device(200);
 
-server.connect(function(){
+device.connect(function(){
 
   // set 'sw1-state' resource
-  server.setData('sw1-state', function(data){
+  device.setChannelData('sw1-state', function(data){
     data.send(sw1.state);  
   });
 
   // set 'led-state' resource
-  server.setData('led-state', function(data){
+  device.setChannelData('led-state', function(data){
     data.send(led.state);
   });
 
   // set 'led-control' resource
-  server.setData('led-control', function(data){
+  device.setChannelData('led-control', function(data){
     let ledState = null;
 
     if(data.payload === 'on'){
       ledState = led.on();
     }
-    else{
+    else if(data.payload === 'off'){
       ledState = led.off();
     }
     data.send(ledState);
@@ -1067,7 +1067,7 @@ client.connect(function(){
   let device = client.accessDevice(200);
 
   // monitor sw1 state transitions every 5 secs
-  device.watch('sw1-state', function(data){
+  device.watchChannelData('sw1-state', function(data){
     console.log('sw1-state value', data);
 
     if(data === true){
@@ -1083,7 +1083,7 @@ client.connect(function(){
   });
 
   // monitor led state transitions every 5 secs
-  device.watch('led-state', function(data){
+  device.watchChannelData('led-state', function(data){
     console.log('led-state value', data);
   });
 });
