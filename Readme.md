@@ -4,8 +4,8 @@
 2. [Create Access Token for Browser Client](#create-an-access-token-for-browser-client)
 3. [Channel Data Resources](#channel-data-resources)
    * [Set Channel Data Resources on a Device](#set-channel-data-resources-on-a-device)
-   * [Capture Channel Data from a Device](#capture-channel-data-from-a-device)
-   * [Watch Channel Data from a Device](#watch-channel-data-from-a-device)
+   * [Capture Channel Data from a Client](#capture-channel-data-from-a-client)
+   * [Watch Channel Data from a Client](#watch-channel-data-from-a-client)
    * [Send Data to a Device](#sending-data-to-a-device)
    * [Example - Using MCP 9808 Temperature Sensor](#using-mcp-9808-temperature-sensor)
 4. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
@@ -101,7 +101,7 @@ device.connect(() => {
   
 });
 ```
-### Capture Channel Data from a Device
+### Capture Channel Data from a Client
 ```js
 const { Client } = require('m2m');
 
@@ -148,7 +148,7 @@ client.connect(() => {
 });
 ```
 
-### Watch Channel Data from a Device
+### Watch Channel Data from a Client
 ```js
 const { Client } = require('m2m');
 
