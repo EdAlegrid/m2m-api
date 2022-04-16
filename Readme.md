@@ -107,12 +107,14 @@ let client = new Client();
 
 client.connect(() => {
   ...
+
+  // Use the alias method if you are accessing only one device from your client
+
   /**********************************************
    * 
    *  Capture channel data using a device alias
    * 
    **********************************************/
-
   // Access the remote device you want to access by creating an alias object
   let device = client.accessDevice(deviceId);
 
@@ -126,6 +128,9 @@ client.connect(() => {
   device.getData(channel-name, (data) => {
     console.log(data);
   });
+
+
+  // Use the client object method if you are accessing multiple devices from your client
 
   /*********************************************************
    * 
@@ -1029,7 +1034,7 @@ server.connect(() => {
 
   // set a GET method resource
   server.setHttpGet(path, (data) => {
-    // set logic for the current path
+    // add application logic for the current http GET path
     // send a response
     data.send(response);
   });
@@ -1037,17 +1042,14 @@ server.connect(() => {
   // or use the shorthand api below which is the same as above
   
   server.get(path, (data) => {
-    // set logic for the current path
-    // send a response
     data.send(response);
   });
 
   // set a POST method resource
   server.setHttpPost(path, (data) => {
-    // set logic for the current path
+    // add application logic for the current http POST path
 
-    // the data.body property is the payload from client
-    // you can use it for whatever purposes in your application logic
+    // the data.body property is the payload from the client
     data.body;
     // send a response
     data.send(response);
@@ -1056,10 +1058,7 @@ server.connect(() => {
   // or use the shorthand api below which is the same as above
   
   server.post(path, (data) => {
-    // set logic for the current path
-
     // the data.body property is the payload from client
-    // you can use it for whatever purposes in your application logic
     data.body;
     // send a response
     data.send(response);
@@ -1075,9 +1074,11 @@ const client = new m2m.Client();
 
 client.connect(() => {
 
-  /**
-   *  Send data using an alias
-   */
+  /******************************************
+   * 
+   *  Access http resources using an alias
+   * 
+   ******************************************/
   let server = client.accessServer(deviceId);
 
   // GET method request
@@ -1102,9 +1103,11 @@ client.connect(() => {
     console.log('response', data);
   });
 
-  /**
-   *  Send data directly from the client object
-   */
+  /**********************************************************
+   * 
+   *  Access http resources directly from the client object
+   * 
+   **********************************************************/
   
   // GET method request
   client.getRequest({id:deviceId , path:path-name}, (data) => {    
@@ -1127,45 +1130,52 @@ client.connect(() => {
   client.post({id:deviceId, path:path-name, body:body-data}, (data) => {   
     console.log('response', data);
   });
-
 });
 ```
 
 ### Example
 #### Device setup
 ```js
-const m2m = require('m2m');
+const { Device } = require('m2m');
 
-const server = new m2m.Device(300);
+const server = new Device(300);
 
 let currentData = {name:'Jim', age:34};
 
 server.connect(() => {
-
   server.get('current/data', (data) => {
     // send current data as response
     data.send(currentData);
   });
 
   server.post('data/update', (data) => {
-
-    currentData = data.body;
-    // send a 'success' response
-    data.send('success');
+    if(data.body){
+      currentData = data.body;
+      // send a 'success' response
+      data.send('success');
+    }
+    else{
+      // send a 'invalid body' response
+      data.send('invalid body');
+    }
   });
 });
 ```
 #### Client request
 ```js
-const m2m = require('m2m');
+const { Client } = require('m2m');
 
-const client = new m2m.Client();
+const client = new Client();
 
 client.connect(() => {
 
-  /**
-   *  send data using an alias
-   */
+  // Note: Use only one method below, but not both
+
+  /*************************************
+   * 
+   *  GET/POST request using an alias
+   * 
+   *************************************/
   let server = client.accessDevice(300);
 
   server.get('current/data', (data) => {    
@@ -1180,17 +1190,18 @@ client.connect(() => {
   // request after update for path 'current/data'
   server.get('current/data'); // {name:'Ed', age:45}
 
-  /**
-   *  client get/post directly from the client object
-   */
-  server.get({id:300, path:'current/data'}, (data) => {    
+  /*******************************************************
+   * 
+   *   GET/POST request directly from the client object
+   * 
+   *******************************************************/
+  client.get({id:300, path:'current/data'}, (data) => {    
    console.log('current/data', data); // {name:'Jim', age:34}
   });
 
-  server.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
+  client.post({id:300, path:'data/update', body:{name:'Ed', age:45}}, (data) => {   
     console.log('data/update', data); // 'success'
   });
-
 });
 ```
 ## Device Orchestration
