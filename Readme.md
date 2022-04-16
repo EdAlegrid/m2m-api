@@ -6,7 +6,7 @@
    * [Set Channel Data Resources on a Device](#set-channel-data-resources-on-a-device)
    * [Capture Channel Data from a Client](#capture-channel-data-from-a-client)
    * [Watch Channel Data from a Client](#watch-channel-data-from-a-client)
-   * [Send Data to a Device](#sending-data-to-a-device)
+   * [Send Data from a Client](#sending-data-from-a-client)
    * [Example - Using MCP 9808 Temperature Sensor](#using-mcp-9808-temperature-sensor)
 4. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
    * [Set GPIO Input Resources on a Device](#set-gpio-input-resources-on-a-device)
@@ -172,23 +172,23 @@ client.connect(() => {
   
   // or use the shorthand api below which is the same as above
   
-  device.watch(channel-name, (data) => {
+  device.watchData(channel-name, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
   });
 
   // watch using a 1 minute poll interval
-  device.watch(channel-name, 60000, (data) => {
+  device.watchData(channel-name, 60000, (data) => {
     console.log(data);
   });
 
   // unwatch channel data
   setTimeout(() => {
-    device.unwatch(channel-name, (data) => {
+    device.unwatchData(channel-name, (data) => {
       console.log(data); // outputs true if channel-name is valid
     });
     // or w/o callback
-    device.unwatch(channel-name);    
+    device.unwatchData(channel-name);    
   }, 5*60000);
 
   /**
@@ -206,23 +206,23 @@ client.connect(() => {
   
   // or use the shorthand api below which is the same as above
 
-  client.watch({id:deviceId, channel:channel-name}, (data) => {
+  client.watchData({id:deviceId, channel:channel-name}, (data) => {
     // data is the value of 'channel' data source
     console.log(data);
   });
   
   // watch using 30000 ms or 30 secs poll interval
-  client.watch({id:deviceId, channel:channel-name, interval:30000}, (data) => {
+  client.watchData({id:deviceId, channel:channel-name, interval:30000}, (data) => {
     console.log(data);
   });
 
   // unwatch channel data
   setTimeout(() => {
-    client.unwatch({id:deviceId, channel:channel-name}, (data) => {
+    client.unwatchData({id:deviceId, channel:channel-name}, (data) => {
       console.log(data); // outputs true if channel-name is valid
     });
     // or w/o callback
-    client.unwatch({id:deviceId, channel:channel-name});
+    client.unwatchData({id:deviceId, channel:channel-name});
   }, 5*60000);
 });
 ```
@@ -251,7 +251,7 @@ server.connect(function(){
 
 });  
 ```
-### Send Channel Data to Device
+### Send Channel Data from a Client
 ```js
 const m2m = require('m2m');
 
