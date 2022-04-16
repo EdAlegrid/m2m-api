@@ -949,6 +949,14 @@ const server = new m2m.Device(deviceId);
 server.connect(() => {
 
   // set a GET method resource
+  server.setHttpGet(path, (data) => {
+    // set logic for the current path
+    // send a response
+    data.send(response);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   server.get(path, (data) => {
     // set logic for the current path
     // send a response
@@ -956,6 +964,18 @@ server.connect(() => {
   });
 
   // set a POST method resource
+  server.setHttpPost(path, (data) => {
+    // set logic for the current path
+
+    // the data.body property is the payload from client
+    // you can use it for whatever purposes in your application logic
+    data.body;
+    // send a response
+    data.send(response);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   server.post(path, (data) => {
     // set logic for the current path
 
@@ -965,6 +985,7 @@ server.connect(() => {
     // send a response
     data.send(response);
   });
+  
 });
 ```
 ### Client GET and POST request
@@ -981,11 +1002,23 @@ client.connect(() => {
   let server = client.accessServer(deviceId);
 
   // GET method request
+  server.getRequest(path, (data) => {    
+    console.log('response', data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   server.get(path, (data) => {    
     console.log('response', data);
   });
 
   // POST method request
+  server.setHttpPost(path, body, (data) => {   
+    console.log('response', data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+
   server.post(path, body, (data) => {   
     console.log('response', data);
   });
@@ -993,13 +1026,25 @@ client.connect(() => {
   /**
    *  Send data directly from the client object
    */
-
+  
   // GET method request
+  client.setHttpGet({id:deviceId , path:path-name}, (data) => {    
+    console.log('response', data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   client.get({id:deviceId , path:path-name}, (data) => {    
     console.log('response', data);
   });
 
   // POST method request
+  client.setHttpPost({id:deviceId, path:path-name, body:body-data}, (data) => {   
+    console.log('response', data);
+  });
+  
+  // or use the shorthand api below which is the same as above
+  
   client.post({id:deviceId, path:path-name, body:body-data}, (data) => {   
     console.log('response', data);
   });
