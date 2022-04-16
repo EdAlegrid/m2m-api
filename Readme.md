@@ -922,7 +922,7 @@ device.connect(function(){
   device.setGpio({mode:'output', pin:[33, 35]});
 });
 ```
-#### Method 1: Access GPIO input/output resources from device1 and client using an alias
+#### Method 1: Access GPIO input/output resources using an alias
 
 ```js
 const m2m = require('m2m');
@@ -971,7 +971,7 @@ client.connect(function(){
   });
 });
 ```
-#### Method 2: Access GPIO input/output resources from device1 and client directly from client
+#### Method 2: Access GPIO input/output resources directly from client object
 
 ```js
 const m2m = require('m2m');
