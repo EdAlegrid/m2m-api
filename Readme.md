@@ -11,8 +11,8 @@
 4. [GPIO Resources for Raspberry Pi](#gpio-resources-for-raspberry-pi)  
    * [Set GPIO Input Resources on a Device](#set-gpio-input-resources-on-a-device)
    * [Set GPIO Output Resources on a Device](#set-gpio-output-resources-on-a-device)
-   * [Capture/Watch GPIO Input Resources from a Device](#capture-and-watch-gpio-input-resources-from-a-device)
-   * [Control (On/Off) GPIO Output Resources from a Device](#control-gpio-output-resources-from-a-device)
+   * [Capture/Watch GPIO Input Resources from a Client](#capture-and-watch-gpio-input-resources-from-a-client)
+   * [Control (On/Off) GPIO Output Resources from a Client](#control-gpio-output-resources-from-a-client)
    * [Using Channel Data API for GPIO Input/Output Resources](#using-channel-data-api-for-gpio-resources)
    * [Example - GPIO Input Monitoring and Output Control](#gpio-input-monitoring-and-output-control)
 5. [HTTP API Resources](#http-resources)
@@ -702,7 +702,7 @@ device.connect(() => {
 });
 ```
 
-### Capture and Watch GPIO Input Resources from a Device
+### Capture and Watch GPIO Input Resources from a Client
 
 There are two ways we can capture and watch GPIO input resources from remote devices.
 
@@ -717,9 +717,11 @@ client.connect(() => {
 
   let device = client.accessDevice(deviceId);
 
-  /**
-   *  Using .gpio() method
-   */
+  /*********************************************
+   * 
+   *  Using .gpio() method from a device alias
+   * 
+   *********************************************/
 
   // get current state of input pin1
   device.gpio({mode:'in', pin:pin1}).getState((state) => {
@@ -728,13 +730,32 @@ client.connect(() => {
   });
 
   // watch input pin1, default scan interval is 100 ms
-  device.gpio({mode:'in', pin:pin1}).watch((state) => {
+  device.gpio({mode:'in', pin:pin1}).watchState((state) => {
     console.log(state);
   });
 
-  /**
-   *  Using .input()/output() method
-   */
+  /*******************************************************
+   * 
+   *  Using .gpio() method directly from a client object
+   * 
+   *******************************************************/
+
+  // get current state of device (id:deviceId) input pin1
+  client.gpio({id:deviceId, mode:'in', pin:pin1}).getState((state) => {
+    console.log(state);
+  });
+
+  // watch state of device (id:deviceId) input pin1, default scan interval is 100 ms
+  client.gpio({id:deviceId, mode:'in', pin:pin1}).watchState((state) => {
+    console.log(state);
+  });
+
+
+  /*****************************************************
+   * 
+   *  Using .input()/output() method from device alias
+   * 
+   *****************************************************/
 
   // get current state of input pin1
   device.input(pin1).getState((state) => {
@@ -743,29 +764,31 @@ client.connect(() => {
   });
 
   // watch input pin1, default scan interval is 100 ms
-  device.input(pin1).watch((state) => {
+  device.input(pin1).watchState((state) => {
     console.log(state);
   });
 
-  /**
-   *  Get and watch gpio input state directly from the client object
-   */
+  /*******************************************************************
+   * 
+   *  Using .input()/output() method directly from the client object
+   * 
+   *******************************************************************/
 
-  // get current state of input pin1  
+  // get current state of device (id:deviceId) input pin1
   client.input({id:deviceId, pin:pin1}).getState((state) => {
     // returns the state of pin1
     console.log(state);
   });
 
-  // watch input pin1, default scan interval is 100 ms
-  client.input({id:deviceId, pin:pin1}).watch((state) => {
+  // watch state of device (id:deviceId) input pin1, default scan interval is 100 ms
+  client.input({id:deviceId, pin:pin1}).watchState((state) => {
     console.log(state);
   });
 
 });
 ```
 
-### Control GPIO Output Resources from a Device
+### Control GPIO Output Resources from a Client
 
 Similar with GPIO input access, there are two ways we can set or control (on/off) the GPIO output state from remote devices.
 
@@ -779,9 +802,12 @@ client.connect(() => {
 
   let device = client.accessDevice(deviceId);
 
-  /**
-   *  Using .gpio() method
-   */
+  /************************************************
+   * 
+   *  Using .gpio() method to control gpio output
+   *  from device alias
+   * 
+   ************************************************/
 
   // Applies both for on/off methods
 
@@ -805,9 +831,12 @@ client.connect(() => {
     // add custom logic here
   });
 
-  /**
-   *  Using .input()/output() method
-   */
+  /***********************************************************
+   * 
+   *  Using .input()/output() method to control gpio output
+   *  from device alias
+   * 
+   ***********************************************************/
 
   // Applies both for on/off methods
 
@@ -831,9 +860,12 @@ client.connect(() => {
     // add custom logic here
   });  
 
-  /**
-   *  Control gpio output directly from the client object
-   */
+  /**********************************************************
+   * 
+   *  Using .input()/output() method to control gpio output
+   *  directly from the client object
+   * 
+   **********************************************************/
 
   // get current state of output pin1  
   client.output({id:deviceId, pin:pin1}).getState((state) => {
@@ -873,10 +905,8 @@ const m2m = require('m2m');
 let device = new m2m.Device(120);
 
 device.connect(function(){
-
   // Set GPIO input resources using pin 11 and 13
   device.setGpio({mode:'input', pin:[11, 13]});
-
 });
 ```
 
@@ -888,10 +918,8 @@ const m2m = require('m2m');
 let device = new m2m.Device(130);
 
 device.connect(function(){
-
   // Set GPIO output resources using pin 33 and 35
   device.setGpio({mode:'output', pin:[33, 35]});
-
 });
 ```
 #### Access GPIO input/output resources from device1 and device2
@@ -913,7 +941,7 @@ client.connect(function(){
   });
 
   // watch input pin 13
-  device1.input(13).watch(function(state){
+  device1.input(13).watchState(function(state){
     if(state){
       // turn OFF output pin 35
       device2.output(35).off();
@@ -931,7 +959,7 @@ client.connect(function(){
   });
 
   // watch input pin 11
-  device1.input(11).watch(function(state){
+  device1.input(11).watchState(function(state){
     if(state){
       // turn ON output pin 33
       device2.output(33).on();
