@@ -898,7 +898,7 @@ Install array-gpio both on device1 and client
 ```js
 $ npm install array-gpio
 ```
-#### Configure GPIO input resources on device 1
+#### Configure GPIO input resources on device1
 ```js
 const m2m = require('m2m');
 
@@ -910,7 +910,7 @@ device.connect(function(){
 });
 ```
 
-#### Configure GPIO output resources on device 2
+#### Configure GPIO output resources on device2
 
 ```js
 const m2m = require('m2m');
@@ -980,38 +980,30 @@ let client = new m2m.Client();
 
 client.connect(function(){
 
-  // get current state of input pin 13 from device 120
   client.input({id:120, pin:13}).getState(function(state){
-    // show current state of pin 13
-    console.log(state);
+    console.log('getState device1 120 input pin 13', state);
   });
 
-  // watch input pin 13
   client.input({id:120, pin:13}).watchState(function(state){
+    console.log('watchState device1 120 input pin 13', state);
     if(state){
-      // turn OFF output pin 35
-      client.output({id:120, pin:35}).off();
+      client.output({id:130, pin:35}).off();
     }
     else{
-      // turn ON output pin 35
-      client.output({id:120, pin:35}).on();
+      client.output({id:130, pin:35}).on();
     }
   });
 
-  // get current state of input pin 11 from device 130
-  client.input({id:130, pin:11}).getState(function(state){
-    // show current state of pin 11
-    console.log(state);
+  client.input({id:120, pin:11}).getState(function(state){
+    console.log('getState device1 120 input pin 11', state);
   });
 
-  // watch input pin 11
-  client.input({id:130, pin:11}).watchState(function(state){
+  client.input({id:120, pin:11}).watchState(function(state){
+    console.log('watchState device1 120 input pin 11', state);
     if(state){
-      // turn ON output pin 33
       client.output({id:130, pin:33}).on();
     }
     else{
-      // turn OFF output pin 33
       client.output({id:130, pin:33}).off();
     }
   });
