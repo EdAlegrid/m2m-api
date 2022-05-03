@@ -1099,35 +1099,35 @@ const server = new m2m.Device(deviceId);
 server.connect(() => {
 
   // set a GET method resource
-  server.setHttpGet(path, (data) => {
+  server.setHttpGet(path, (req, res) => {
     // add application logic for the current http GET path
     // send a response
-    data.send(response);
+    res.send(response);
   });
   
   // or use the shorthand api below which is the same as above
   
-  server.get(path, (data) => {
-    data.send(response);
+  server.get(path, (req, res) => {
+    res.send(response);
   });
 
   // set a POST method resource
-  server.setHttpPost(path, (data) => {
+  server.setHttpPost(path, (req, res) => {
     // add application logic for the current http POST path
 
     // the data.body property is the payload from the client
-    data.body;
+    res.body;
     // send a response
-    data.send(response);
+    res.send(response);
   });
   
   // or use the shorthand api below which is the same as above
   
-  server.post(path, (data) => {
+  server.post(path, (req, res) => {
     // the data.body property is the payload from client
-    data.body;
+    res.body;
     // send a response
-    data.send(response);
+    res.send(response);
   });
   
 });
@@ -1209,20 +1209,20 @@ const server = new Device(300);
 let currentData = {name:'Jim', age:34};
 
 server.connect(() => {
-  server.get('current/data', (data) => {
+  server.get('current/data', (req, res) => {
     // send current data as response
-    data.send(currentData);
+    res.json(currentData);
   });
 
-  server.post('data/update', (data) => {
-    if(data.body){
-      currentData = data.body;
+  server.post('data/update', (req, res) => {
+    if(req.body){
+      currentData = req.body;
       // send a 'success' response
-      data.send('success');
+      res.send('success');
     }
     else{
       // send a 'invalid body' response
-      data.send('invalid body');
+      res.send('invalid body');
     }
   });
 });
