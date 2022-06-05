@@ -61,6 +61,8 @@ client.connect(tkn, () => { your app logic ...});
 
 Click [here](#create-an-access-token-for-browser-client) on how to create an access token.   
 
+<br>
+
 ## Channel Data Resources
 
 ### Set Channel Data Resources on a Device
@@ -596,6 +598,7 @@ client.connect(function(){
   }, 10*60000);
 });
 ```
+<br>
 
 ## GPIO Resources for Raspberry Pi
 
@@ -1091,6 +1094,8 @@ client.connect(function(){
   });
 });
 ```
+<br>
+
 ## HTTP Resources
 
 ### Device GET and POST method setup
