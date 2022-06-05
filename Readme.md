@@ -23,6 +23,8 @@
 8. [Connecting to other server](#connecting-to-other-m2m-server)
 9. [File Integrity Monitoring](https://github.com/EdAlegrid/file-integrity-monitoring)
 
+<br>
+
 ## Connecting to Server
 
 Before your clients and devices start communicating with each other, they must be authenticated with the server.
