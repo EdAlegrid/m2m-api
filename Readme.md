@@ -1,4 +1,4 @@
-# m2m-api
+# M2M API
 ## Table of contents
 1. [Connecting to server](#connecting-to-server)
 2. [Create Access Token for Browser Client](#create-an-access-token-for-browser-client)
