@@ -1480,6 +1480,8 @@ client.connect(() => {
 });
 ```
 ### Client request to get the available resources from a specific device
+You can get the details of a specific device using the .resourcesInfo() method.
+Note: The callback will only provide results if the remote device is online.
 
 ```js
 const m2m = require('m2m');
@@ -1492,8 +1494,11 @@ client.connect(() => {
 
   // request to get device 300 resources
   // GPIO input/output objects, available channels and HTTP url paths, system information etc.
+  // Note: Results will be provided if device is online.
+  
+  // METHOD 1 - Get it from 'device' alias
   device.resourcesInfo(function(data){
-    console.log('device1 setup data', data);
+    console.log('device resourcesInfo', data);
     // data output
     /*{
       id: 300,
@@ -1510,7 +1515,13 @@ client.connect(() => {
       },
       channel: { name: [ 'voltage', 'gateway1', 'tcp' ] }
     }*/
-  });  
+  });
+  
+  // METHOD 2 - Get it directly from the client object.
+  client.resourcesInfo(300, function(data){
+    console.log('device 300 resourcesInfo', data);
+  });
+  
 });
 ```
 ## Create an Access Token for Browser Client
