@@ -1494,7 +1494,7 @@ client.connect(() => {
 
   // request to get device 300 resources
   // GPIO input/output objects, available channels and HTTP url paths, system information etc.
-  // Note: Results will be provided if device is online.
+  // Note: If the device is online, the method's callback will return a result.
   
   // METHOD 1 - Get it from 'device' alias
   device.resourcesInfo(function(data){
